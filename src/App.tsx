@@ -4,12 +4,9 @@ import Profile from "./pages/Profile";
 import CreateProfile from "./pages/CreateProfile";
 import RestaurantModal from "./utils/RestaurantModal";
 
-import { Route, Routes, useLocation,} from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
-import {
-  useAccount,
-  useContractRead,
-} from "@starknet-react/core";
+import { useAccount, useContractRead } from "@starknet-react/core";
 import React from "react";
 import loyalty from "./loyalty.json";
 

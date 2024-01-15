@@ -1,10 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from "react";
+import React, { useState,useMemo } from "react";
 import { useParams } from "react-router-dom";
 import Modal from "react-modal";
 import { Contract } from "starknet";
 import bg from "../assets/side-background.png";
 import Navbar from "../components/Navbar";
+import loyalty from "../loyalty.json";
+
+import {
+  useAccount,
+  useContractWrite,
+  useContract,
+  useProvider,
+} from "@starknet-react/core";
 
 // import contractAbi from "../../../smart-contracts/";
 const contractAddress =
@@ -44,35 +51,34 @@ const RestaurantModal = () => {
     const { name, value } = e.target;
     setReviewData({ ...reviewData, [name]: value });
   };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const setLoyalty = async () => {
-      // try {
-      //   const provider = new RpcProvider({
-      //     sequencer: { network: constants.NetworkName.SN_GOERLI },
-      //   });
-      //   const testAddress =
-      //     "0x543a9944c1f169f4fa16f918c555fe23977add9b226340823b66835b5a27e2e";
-      //   const testAbi = await provider.getClassAt(testAddress);
-      //   const newContract = new Contract(
-      //     testAbi.abi,
-      //     testAddress,
-      //     appState.address
-      //   );
-      //   console.log("mycontract", newContract, appState);
-      //   const response = await newContract.set_loyalty(
-      //     appState.address.address,
-      //     amount / 10
-      //   );
-      //   console.log(">> response 0", response);
-      //   await provider.waitForTransaction(response.transaction_hash);
-      //   return true;
-      // } catch (error) {
-      //   console.log("error", error);
-      //   return false;
-      // }
+
+  const { address } = useAccount();
+  const { provider } = useProvider();
+
+  const { contract } = useContract({
+    address:
+      "0x0358a819b026c94bfa739931c53cca29501e32e72b1f6cdc98d49dd4905d896e",
+
+    abi: loyalty.abi,
+    provider: provider,
+  });
+  const calls = useMemo(() => {
+    const tx2 = {
+      contractAddress:
+        "0x0358a819b026c94bfa739931c53cca29501e32e72b1f6cdc98d49dd4905d896e",
+      entrypoint: "set_loyalty",
+      calldata: [(address as string) || "0x000000000", amount / 10],
     };
-    setLoyalty();
+    return [tx2];
+  }, []);
+
+  const { writeAsync } = useContractWrite({ calls });
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(amount);
+    setAmount(amount / 10);
+    console.log(amount);
+    await writeAsync();
     console.log("Submitted Review:", reviewData);
     setIsModalOpen(false);
   };
@@ -195,12 +201,9 @@ const RestaurantModal = () => {
                 value={amount}
                 onChange={(e) => {
                   setAmount(Number(e.target.value));
-                  console.log(e.target.value);
                 }}
                 className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-[#4B687A]"
                 placeholder="Enter your rating (1-5)"
-                min="1"
-                max="5"
                 required
               />
             </div>

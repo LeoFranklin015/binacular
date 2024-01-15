@@ -19,7 +19,15 @@ function OwnerPage() {
     localStorage.setItem("milestone", milestone);
     localStorage.setItem("description", description);
     localStorage.setItem("gstId", gstId);
-  }, [ownerName, restaurantName, restaurantAddress, milestone, description, gstId]);
+  }, [
+    ownerName,
+    restaurantName,
+    restaurantAddress,
+    milestone,
+    description,
+    gstId,
+  ]);
+
   return (
     <div className="flex flex-col h-[370px] items-center justify-center ml-[60px] space-y-[27px]">
       <div className="flex flex-col w-[300px] h-22 bg-gray-10 border-b-3 border-[#5F7C8D]">
@@ -51,13 +59,11 @@ function OwnerPage() {
         />
       </div>
       <div className="flex flex-col w-[300px] h-22 bg-gray-10 border-b-3 border-[#5F7C8D]">
-        <label className="text-[#7A999C] text-[20px] font-serif">
-          Milestone:
-        </label>
+        <label className="text-[#7A999C] text-[20px] font-serif">Image:</label>
         <input
           className="text-[#7A999C] focus:outline-none"
           type="number"
-          placeholder="Count to claim rewards"
+          placeholder="Image url"
         />
       </div>
       <div className="flex flex-col w-[300px] h-22 bg-gray-10 border-b-3 border-[#5F7C8D]">
@@ -79,7 +85,10 @@ function OwnerPage() {
         />
       </div>
       <div className="flex flex-col h-10 p-5 m-3">
-        <button onClick={() => navigate("/")} className="px-6 py-3 bg-[#4B687A] rounded-lg text-white font-bold">
+        <button
+          onClick={() => navigate("/")}
+          className="px-6 py-3 bg-[#4B687A] rounded-lg text-white font-bold"
+        >
           Submit
         </button>
       </div>

@@ -174,13 +174,15 @@ const OwnerPage: React.FC<OwnerPageProps> = () => {
         },
         body: JSON.stringify({
           name: ownerName,
-          restaurants: {
-            name: restaurantName,
-            address: restaurantAddress,
-            img: milestone,
-            desc: description,
-            gst: gstId,
-          },
+          restaurants: [
+            {
+              name: restaurantName,
+              address: restaurantAddress,
+              img: milestone,
+              desc: description,
+              gst: gstId,
+            },
+          ],
         }),
       });
 

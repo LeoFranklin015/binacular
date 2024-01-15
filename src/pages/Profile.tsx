@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useMemo } from "react";
 
 import {
@@ -37,6 +38,8 @@ const Profile: React.FC<ProfileProps> = ({ loyalty }) => {
 
   const [count] = useState(1);
   const { provider } = useProvider();
+  const [loading, setLoading] = useState(false);
+  const [displayImg,setDisplayImg] = useState(false)
 
   const { contract } = useContract({
     address:
@@ -80,6 +83,29 @@ const Profile: React.FC<ProfileProps> = ({ loyalty }) => {
 
   const { writeAsync: writeMulti } = useContractWrite({ calls });
 
+  const mint = async () => {
+    try {
+      setLoading(true);
+
+      // Perform the minting operation
+      await writeMulti();
+
+      // Simulate a 5-second loading period
+      await new Promise(resolve => {
+        setTimeout(resolve, 5000)
+        
+      });
+      setDisplayImg(true);
+
+      // Update the UI or perform any additional actions after loading
+      console.log('Minting complete!');
+    } catch (error) {
+      console.error('Error minting:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   console.log(loyalty);
   return (
     <div className="flex">
@@ -119,11 +145,25 @@ const Profile: React.FC<ProfileProps> = ({ loyalty }) => {
           </div>
           <div className="w-[200px] flex flex-col h-10 p-5 m-3">
             <button
-              onClick={async () => await writeMulti()}
+              onClick={async () => await mint()}
               className="px-6 py-3 bg-[#7A999C] rounded-lg text-white font-bold"
             >
               Mint
             </button>
+            {loading && (
+          <div className="mt-2">
+            {/* Display loading indicator, e.g., an image */}
+            <img className="w-[50px] mx-auto" src="https://i.gifer.com/ZKZg.gif" alt="Loading" />
+            
+          </div>
+        )}
+        {
+          displayImg && (
+            <div className="mt-2 mx-auto">
+              <img className="w-[90px] " src="https://assets-global.website-files.com/632c0b24c6c60510a1d60f5c/6332b7a2465c5f4e8455a4e9_bored-ape-yacht-club-nft-art-819x1024.jpg" alt="" />
+            </div>
+          )
+        }
           </div>
         </div>
       </div>

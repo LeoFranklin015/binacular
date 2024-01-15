@@ -19,7 +19,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({
   location,
 }) => {
   return (
-    <div className="bg-[#7A999C] w-[345px] h-[482px] rounded-lg shadow-lg px-[80px] py-[37px] mb-4">
+    <div className="bg-[#7A999C] w-[345px] h-[562px] rounded-lg shadow-lg px-[80px] py-[37px] my-4">
       <Link to={`/details/${id}`} className="flex flex-col items-center ">
         <img
           src={imageUrl}

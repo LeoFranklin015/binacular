@@ -1,33 +1,23 @@
 // import { useBlock } from "@starknet-react/core";
-
-import Header from "./components/Header";
-import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import CreateProfile from "./pages/CreateProfile";
 import RestaurantModal from "./utils/RestaurantModal";
 
-import { Route, Routes, useLocation, Navigate } from "react-router-dom";
+import { Route, Routes, useLocation,} from "react-router-dom";
 
 import {
   useAccount,
-  useContractWrite,
-  useContract,
-  useProvider,
   useContractRead,
 } from "@starknet-react/core";
-import React, { useState, useMemo } from "react";
-import abi_erc20 from "./nft.json";
+import React from "react";
 import loyalty from "./loyalty.json";
 
 function App() {
   const { address } = useAccount();
   console.log(address);
-  const [count] = useState(1);
-  const { provider } = useProvider();
 
-  const [Loyalty, setLoyalty] = useState<bigint>(0n);
-  const { data, isError, isLoading, error } = useContractRead({
+  const { data } = useContractRead({
     functionName: "get_loyalty",
     args: [address as string],
     abi: loyalty.abi,

@@ -1,6 +1,25 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function OwnerPage() {
+  const [ownerName, setOwnerName] = useState("");
+  const [restaurantName, setRestaurantName] = useState("");
+  const [restaurantAddress, setRestaurantAddress] = useState("");
+  const [milestone, setMilestone] = useState("");
+  const [description, setDescription] = useState("");
+  const [gstId, setGstId] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Update localStorage when state changes
+    localStorage.setItem("ownerName", ownerName);
+    localStorage.setItem("restaurantName", restaurantName);
+    localStorage.setItem("restaurantAddress", restaurantAddress);
+    localStorage.setItem("milestone", milestone);
+    localStorage.setItem("description", description);
+    localStorage.setItem("gstId", gstId);
+  }, [ownerName, restaurantName, restaurantAddress, milestone, description, gstId]);
   return (
     <div className="flex flex-col h-[370px] items-center justify-center ml-[60px] space-y-[27px]">
       <div className="flex flex-col w-[300px] h-22 bg-gray-10 border-b-3 border-[#5F7C8D]">
@@ -60,7 +79,7 @@ function OwnerPage() {
         />
       </div>
       <div className="flex flex-col h-10 p-5 m-3">
-        <button className="px-6 py-3 bg-[#4B687A] rounded-lg text-white font-bold">
+        <button onClick={() => navigate("/")} className="px-6 py-3 bg-[#4B687A] rounded-lg text-white font-bold">
           Submit
         </button>
       </div>

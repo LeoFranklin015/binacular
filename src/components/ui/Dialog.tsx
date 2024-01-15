@@ -11,7 +11,7 @@ export default function Dialog({
     <div>
       <Button onClick={() => setIsOpen(true)}>{title}</Button>
       {isOpen && (
-        <div className="fixed z-50 inset-0 flex items-center justify-center bg-black/30">
+        <div className="fixed bg-[#97B3B6] z-50 inset-0 flex items-center justify-center bg-black/30">
           <div className="p-8 bg-white rounded-md flex flex-col gap-12">
             <div className="flex flex-row justify-between w-full">
               <h1 className="font-semibold text-xl">{title}</h1>

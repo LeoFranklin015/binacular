@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useState } from "react";
 import { useAccount, useDisconnect } from "@starknet-react/core";
 import { useNavigate, Link } from "react-router-dom";
-import ConnectModal from "./starknet/ConnectModal"; // Make sure to import ConnectModal from its correct path
+import ConnectModal from "./starknet/ConnectModal";
+import navbg from "../assets/navbg.jpeg"
 
 interface NavbarProps {
   // Add any props if needed
 }
 
 const Navbar: React.FC<NavbarProps> = (
+  // eslint-disable-next-line no-empty-pattern
   {
     /* Props here */
   }
@@ -38,18 +41,20 @@ const Navbar: React.FC<NavbarProps> = (
   return (
     <div className="">
       <section className="relative mx-auto">
-        <nav className="flex justify-between bg-gray-900 text-black w-full bg-hero">
-          <div className="px-5 py-6 flex w-full items-center">
-            <a className="text-3xl font-bold font-heading" href="/">
+        <nav style={{backgroundImage: `url(${navbg})`}} className="flex justify-between h-[170px] text-black w-full bg-hero">
+          <div className="px-16 py-6 flex w-full items-center">
+            <a className="text-3xl font-bold font-heading font-title tracking-widest" href="/">
               Milestone
             </a>
 
+            
+            <div className="fixed top-[50px] right-[50px] justify-between flex flex-row px-4 p-2">
             <div className="hidden xl:flex space-x-5 items-center px-10">
               <Link to="/profile">
-                <a className="flex items-center hover:text-gray-200" href="#">
+                <a className="flex items-center hover:text-gray-800" href="#">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 hover:text-gray-200"
+                    className="h-8 w-8"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -64,7 +69,6 @@ const Navbar: React.FC<NavbarProps> = (
                 </a>
               </Link>
             </div>
-            <div className="fixed top-0 left-0 right-0 bg-white border justify-between flex flex-row px-4 p-2">
               {address ? (
                 <div className="flex flex-col items-end bg-zinc-100 rounded-md px-6 py-2">
                   <p className="font-semibold">{`${address.slice(

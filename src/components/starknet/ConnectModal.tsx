@@ -3,11 +3,10 @@ import { Connector, useConnect } from "@starknet-react/core";
 import React from "react";
 import { Button } from "../ui/Button";
 import Dialog from "../ui/Dialog";
-import { useNavigate } from "react-router-dom";
 
 export default function ConnectModal() {
   const { connect, connectors } = useConnect();
-  const navigate = useNavigate();
+
   // const connectAndNaviagate = () => {
 
   // }

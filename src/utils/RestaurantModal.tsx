@@ -1,17 +1,11 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Modal from "react-modal";
-import { Contract } from "starknet";
+
 import bg from "../assets/side-background.png";
 import Navbar from "../components/Navbar";
-import loyalty from "../loyalty.json";
 
-import {
-  useAccount,
-  useContractWrite,
-  useContract,
-  useProvider,
-} from "@starknet-react/core";
+import { useAccount, useContractWrite } from "@starknet-react/core";
 
 interface Restaurant {
   name: string;
@@ -57,15 +51,7 @@ const RestaurantModal = () => {
   };
 
   const { address } = useAccount();
-  const { provider } = useProvider();
 
-  const { contract } = useContract({
-    address:
-      "0x0358a819b026c94bfa739931c53cca29501e32e72b1f6cdc98d49dd4905d896e",
-
-    abi: loyalty.abi,
-    provider: provider,
-  });
   const calls = useMemo(() => {
     const tx2 = {
       contractAddress:

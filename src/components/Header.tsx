@@ -14,9 +14,11 @@ export default function Header() {
       if (address) {
         // Perform an asynchronous check if the user exists in the database
         try {
-          const response = await fetch(`/user/${address}`);
+          const response = await fetch(
+            `https://binocular-be.onrender.com/user/${address}`
+          );
           const data = await response.json();
-
+          console.log(data);
           if (data.alreadyExists) {
             // If user exists, navigate to the home page
             navigate("/");

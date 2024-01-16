@@ -109,7 +109,7 @@ const Profile: React.FC<ProfileProps> = ({ loyalty }) => {
       contractAddress:
         "0x0358a819b026c94bfa739931c53cca29501e32e72b1f6cdc98d49dd4905d896e",
       entrypoint: "remove_loyalty",
-      calldata: [(address as string) || "0x000000000", 100],
+      calldata: [(address as string) || "0x000000000", 1000],
     };
     return [tx1, tx2];
   }, [address, currentSupply]);
@@ -192,9 +192,16 @@ const Profile: React.FC<ProfileProps> = ({ loyalty }) => {
             <button
               onClick={async () => await mint()}
               className="px-6 py-3 bg-[#7A999C] rounded-lg text-white font-bold"
+              disabled={loyalty < 1000}
             >
               Mint
             </button>
+            {/* Display message when loyalty is insufficient */}
+            {loyalty < 1000 && (
+              <span className="text-[#FF0000] text-sm mt-2">
+                You need 1000 loyalty to mint.
+              </span>
+            )}
             {loading && (
               <div className="mt-2">
                 {/* Display loading indicator, e.g., an image */}

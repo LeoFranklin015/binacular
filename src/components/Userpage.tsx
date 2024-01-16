@@ -100,15 +100,19 @@ const UserPage: React.FC<UserPageProps> = () => {
   const { address } = useAccount();
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`http://localhost:3070/profile/${address}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: userName,
-        }),
-      });
+      const response = await fetch(
+        `https://binocular-be.onrender.com/profile/${address}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: userName,
+            type: "User",
+          }),
+        }
+      );
 
       if (response.ok) {
         console.log("Profile updated successfully");

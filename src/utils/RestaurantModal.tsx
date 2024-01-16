@@ -1,4 +1,4 @@
-import React, { useState,useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Modal from "react-modal";
 import { Contract } from "starknet";
@@ -13,9 +13,13 @@ import {
   useProvider,
 } from "@starknet-react/core";
 
-// import contractAbi from "../../../smart-contracts/";
-const contractAddress =
-  "0x5302e3d1d237dd13dbca7bd0e6448c5248dae4382010b39b21fc32efc51e07a";
+interface Restaurant {
+  name: string;
+  address: string;
+  img: string;
+  desc: string;
+  gst: string;
+}
 
 const RestaurantModal = () => {
   const { id } = useParams();
@@ -70,7 +74,7 @@ const RestaurantModal = () => {
       calldata: [(address as string) || "0x000000000", amount / 10],
     };
     return [tx2];
-  }, []);
+  }, [address, amount]);
 
   const { writeAsync } = useContractWrite({ calls });
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -82,72 +86,53 @@ const RestaurantModal = () => {
     console.log("Submitted Review:", reviewData);
     setIsModalOpen(false);
   };
-  const restaurants = [
-    {
-      id: 1,
-      name: "Restaurant A",
-      imageUrl: "https://via.placeholder.com/300",
-      averageRating: 4.5,
-      location: "Location A",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      images: [
-        "https://via.placeholder.com/150",
-        "https://via.placeholder.com/150",
-        // ... more image URLs
-      ],
-      reviews: ["Great food!", "Amazing service!"],
-    },
-    {
-      id: 2,
-      name: "Restaurant B",
-      imageUrl: "https://via.placeholder.com/300",
-      averageRating: 4.0,
-      location: "Location B",
-      description:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
-      images: [
-        "https://via.placeholder.com/150",
-        "https://via.placeholder.com/150",
-        // ... more image URLs
-      ],
-      reviews: ["Good ambiance.", "Could improve the menu variety."],
-    },
-  ];
 
-  const restaurant = restaurants.find((r) => r.id === parseInt(id!, 10));
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+
+  const fetchRestaurants = async () => {
+    try {
+      const response = await fetch(
+        "https://binocular-be.onrender.com/restaurants"
+      );
+      console.log(response);
+      const data = await response.json();
+      console.log(data.restaurants);
+      setRestaurants(data.restaurants);
+    } catch (error) {
+      console.error("Error fetching restaurants:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRestaurants();
+  }, []);
+
+  const restaurantIndex = parseInt(id!, 10);
+  const restaurant = restaurants[restaurantIndex];
 
   if (!restaurant) {
     return <div className="text-center mt-8">Restaurant not found!</div>;
   }
-
-  const {
-    imageUrl,
-    name,
-    averageRating,
-    location,
-    description,
-    images,
-    reviews,
-  } = restaurant;
+  // const { img, name, address, desc, images, reviews } = restaurant;
 
   return (
     <div>
       <Navbar />
       <div className="max-w-2xl mx-auto flex flex-col items-center gap-5">
-        <h1 className="text-3xl font-bold mb-4">{name}</h1>
+        <h1 className="text-3xl font-bold mb-4">{restaurant.name}</h1>
         <div className="flex flex-col justify-between">
           <img
-            src={imageUrl}
+            src={restaurant.img}
             alt="Restaurant"
             className=" w-96 h-unit-60 object-cover mb-4"
           />
           <div className="flex justify-between mb-4">
-            <p className="text-gray-600">Location:{location}</p>
-            <p className="text-yellow-500">Rating:{averageRating}/5</p>
+            <p className="text-gray-600">Location:{restaurant.address}</p>
+            <p className="text-yellow-500">Rating:{4}/5</p>
           </div>
         </div>
         <div className="text-gray-800">
-          <p>{description}</p>
+          <p>{restaurant.desc}</p>
         </div>
         <div className="flex flex-col w-full  gap-3">
           <h4 className="text-[#2d626E] font-bold">Images</h4>
@@ -184,7 +169,8 @@ const RestaurantModal = () => {
               </label>
               <textarea
                 name="reviewText"
-                value={reviewData.reviewText}
+                // value={reviewData.reviewText}
+                value={restaurant.gst}
                 onChange={handleInputChange}
                 className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-[#4B687A]"
                 placeholder="Enter the GST no"

@@ -39,16 +39,53 @@ const Profile: React.FC<ProfileProps> = ({ loyalty }) => {
   const [count] = useState(1);
   const { provider } = useProvider();
   const [loading, setLoading] = useState(false);
-  const [displayImg,setDisplayImg] = useState(false)
+  const [displayImg, setDisplayImg] = useState(false);
+  const [currentSupply, setCurrentSupply] = useState<number>(0);
+  const [User, setUser] = useState("");
+  const [type, setType] = useState("");
 
-  const { contract } = useContract({
-    address:
-      "0x0367fe8c6d35b2eb3437c715c2b9b1178e19e584eacc2d2da8cd5bd9614324c3",
+  useEffect(() => {
+    // Fetch the initial supply value
+    const fetchSupply = async () => {
+      try {
+        // console.log("fetching");
+        const response = await fetch(
+          "https://binocular-be.onrender.com/supply"
+        );
+        const data = await response.json();
 
-    abi: nft.abi,
-    provider: provider,
-  });
+        setCurrentSupply(data.value);
+      } catch (error) {
+        console.error("Error fetching supply:", error);
+      }
+    };
 
+    fetchSupply();
+    console.log(currentSupply);
+  }, [currentSupply]);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const walletAddress = "user_wallet_address"; // Replace with the actual wallet address
+        const response = await fetch(
+          `https://binocular-be.onrender.com/profile/${address}`
+        );
+        const userData = await response.json();
+
+        if (response.ok) {
+          setUser(userData.user.name);
+          setType(userData.user.type);
+        } else {
+          console.error("Error fetching user profile:", userData.message);
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [address]);
   // const calls = useMemo(() => {
   //   if (!address || !contract) return [];
   //   return contract.populateTransaction["_mint"]!(address, {
@@ -66,11 +103,7 @@ const Profile: React.FC<ProfileProps> = ({ loyalty }) => {
       contractAddress:
         "0x0367fe8c6d35b2eb3437c715c2b9b1178e19e584eacc2d2da8cd5bd9614324c3",
       entrypoint: "_mint",
-      calldata: [
-        (address as string) || "0x000000000", // Ensure it's a string or use a default value
-        4,
-        0,
-      ],
+      calldata: [(address as string) || "0x000000000", currentSupply, 0],
     };
     const tx2 = {
       contractAddress:
@@ -79,7 +112,7 @@ const Profile: React.FC<ProfileProps> = ({ loyalty }) => {
       calldata: [(address as string) || "0x000000000", 100],
     };
     return [tx1, tx2];
-  }, []);
+  }, [address, currentSupply]);
 
   const { writeAsync: writeMulti } = useContractWrite({ calls });
 
@@ -90,21 +123,33 @@ const Profile: React.FC<ProfileProps> = ({ loyalty }) => {
       // Perform the minting operation
       await writeMulti();
 
+      //token id
+
+      setCurrentSupply((prevSupply) => prevSupply + 1);
+
+      // Update the supply on the server
+      await fetch("https://binocular-be.onrender.com/updateSupply", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      });
+
       // Simulate a 5-second loading period
-      await new Promise(resolve => {
-        setTimeout(resolve, 5000)
-        
+      await new Promise((resolve) => {
+        setTimeout(resolve, 5000);
       });
       setDisplayImg(true);
 
       // Update the UI or perform any additional actions after loading
-      console.log('Minting complete!');
+      console.log("Minting complete!");
     } catch (error) {
-      console.error('Error minting:', error);
+      console.error("Error minting:", error);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   console.log(loyalty);
   return (
@@ -124,13 +169,13 @@ const Profile: React.FC<ProfileProps> = ({ loyalty }) => {
             <span className="text-[#7A999C] text-left text-[20px] font-serif mr-[50px]">
               Name:
             </span>{" "}
-            {profileDetails.name}
+            {User}
           </div>
           <div className="mb-2 flex justify-center w-[200px]">
             <span className="text-[#7A999C] text-[20px] font-serif mr-[50px]">
               Type:
             </span>{" "}
-            {profileDetails.type}
+            {type}
           </div>
           <div className="mb-2 flex justify-between text-left w-[170px]">
             <span className="text-[#7A999C] text-left text-[20px] font-serif mr-[50px]">
@@ -151,19 +196,24 @@ const Profile: React.FC<ProfileProps> = ({ loyalty }) => {
               Mint
             </button>
             {loading && (
-          <div className="mt-2">
-            {/* Display loading indicator, e.g., an image */}
-            <img className="w-[50px] mx-auto" src="https://i.gifer.com/ZKZg.gif" alt="Loading" />
-            
-          </div>
-        )}
-        {
-          displayImg && (
-            <div className="mt-2 mx-auto">
-              <img className="w-[90px] " src="https://assets-global.website-files.com/632c0b24c6c60510a1d60f5c/6332b7a2465c5f4e8455a4e9_bored-ape-yacht-club-nft-art-819x1024.jpg" alt="" />
-            </div>
-          )
-        }
+              <div className="mt-2">
+                {/* Display loading indicator, e.g., an image */}
+                <img
+                  className="w-[50px] mx-auto"
+                  src="https://i.gifer.com/ZKZg.gif"
+                  alt="Loading"
+                />
+              </div>
+            )}
+            {displayImg && (
+              <div className="mt-2 mx-auto">
+                <img
+                  className="w-[90px] "
+                  src="https://assets-global.website-files.com/632c0b24c6c60510a1d60f5c/6332b7a2465c5f4e8455a4e9_bored-ape-yacht-club-nft-art-819x1024.jpg"
+                  alt=""
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

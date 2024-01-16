@@ -40,11 +40,14 @@ const Navbar: React.FC<NavbarProps> = (
 
   useEffect(() => {
     console.log(address);
+    let isMounted = true;
     const checkUserExists = async () => {
-      if (address) {
+      if (address && isMounted) {
         // Perform an asynchronous check if the user exists in the database
         try {
-          const response = await fetch(`http://localhost:3070/user/${address}`);
+          const response = await fetch(
+            `https://binocular-be.onrender.com/user/${address}`
+          );
           const data = await response.json();
 
           if (data.alreadyExists) {
@@ -61,7 +64,11 @@ const Navbar: React.FC<NavbarProps> = (
     };
 
     checkUserExists();
-  }, [address]);
+
+    return () => {
+      isMounted = false; // Cleanup to prevent state update on unmounted component
+    };
+  }, []);
 
   return (
     <div className="">

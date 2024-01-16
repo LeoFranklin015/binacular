@@ -71,7 +71,9 @@ const RestaurantList: React.FC = () => {
 
   const fetchRestaurants = async () => {
     try {
-      const response = await fetch("http://localhost:3070/restaurants");
+      const response = await fetch(
+        "https://binocular-be.onrender.com/restaurants"
+      );
       console.log(response);
       const data = await response.json();
       console.log(data.restaurants);

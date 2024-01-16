@@ -167,24 +167,28 @@ const OwnerPage: React.FC<OwnerPageProps> = () => {
     try {
       // const walletAddress = "1234567890"; // Replace with the actual wallet address
 
-      const response = await fetch(`http://localhost:3070/profile/${address}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: ownerName,
-          restaurants: [
-            {
-              name: restaurantName,
-              address: restaurantAddress,
-              img: milestone,
-              desc: description,
-              gst: gstId,
-            },
-          ],
-        }),
-      });
+      const response = await fetch(
+        `https://binocular-be.onrender.com/profile/${address}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: ownerName,
+            type: "owner",
+            restaurants: [
+              {
+                name: restaurantName,
+                address: restaurantAddress,
+                img: milestone,
+                desc: description,
+                gst: gstId,
+              },
+            ],
+          }),
+        }
+      );
 
       if (response.ok) {
         console.log("Profile updated successfully");

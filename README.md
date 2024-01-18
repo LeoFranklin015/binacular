@@ -1,6 +1,5 @@
 # Binocular: Revolutionizing Dining with Blockchain Rewards
 
-![Binocular Logo](link-to-logo.png) <!-- If you have a logo, replace 'link-to-logo.png' with the actual path or URL -->
 
 Binocular is a groundbreaking app that leverages blockchain technology to connect restaurant owners and users, transforming the dining experience. Users earn loyalty points for each visit, securely recorded on the blockchain. These points can be accumulated to mint exclusive NFTs, which serve as digital vouchers for discounts at participating restaurants.
 

@@ -59,6 +59,13 @@ npm install
 npm start
 ```
 
+Contracts
+
+```bash
+
+https://github.com/LeoFranklin015/binocular_contracts.git
+
+'''
 ## Contributing
 We welcome contributions! Follow these steps to contribute:
 
